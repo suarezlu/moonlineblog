@@ -128,6 +128,36 @@ func (this *SysController) CategoryUpdate() {
 	this.StopRun()
 }
 
+// 删除分类（后台）
+func (this *SysController) CategoryDel() {
+	id, _ := this.GetInt("Id")
+	this.Orm.Delete(&models.Category{Id: id})
+
+	this.Data["json"] = map[string]interface{}{"code": 0, "msg": ""}
+	this.ServeJSON()
+	this.StopRun()
+}
+
+// 添加分类
+func (this *SysController) CategoryAdd() {
+	name := this.GetString("Name")
+	if name != "" {
+		var category models.Category
+		category.Name = name
+		_, err := this.Orm.Insert(&category)
+		if err == nil {
+			this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "data": category}
+		} else {
+			this.Data["json"] = map[string]interface{}{"code": 1, "msg": err.Error()}
+		}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 1, "msg": "name is empty"}
+	}
+
+	this.ServeJSON()
+	this.StopRun()
+}
+
 // 返回字符串的md5值
 func Md5(str string) string {
 	if str != "" {
