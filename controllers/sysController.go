@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"io"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path"
@@ -94,6 +95,35 @@ func (this *SysController) Login() {
 func (this *SysController) Logout() {
 	this.DelSession("sysuserid")
 	this.Redirect("/sys/login", 302)
+}
+
+// 修改密码
+func (this *SysController) Pwd() {
+	if this.Ctx.Input.IsPost() {
+		pwd := this.GetString("pwd", "")
+		newPwd := this.GetString("newpwd")
+		repeatPwd := this.GetString("repeatpwd")
+		code := 0
+		msg := ""
+		if this.Auth.Password == Md5(pwd+this.User.Salt) {
+			if newPwd == repeatPwd {
+				salt := GetRandomString(5)
+				msg = salt
+				this.Auth.User.Salt = salt
+				this.Auth.User.Password = Md5(newPwd + salt)
+				this.Orm.Update(&this.Auth.User)
+			} else {
+				code = 1
+				msg = "新密码和重复新密码不一致！"
+			}
+		} else {
+			code = 1
+			msg = "原密码错误!！"
+		}
+		this.Data["json"] = map[string]interface{}{"code": code, "msg": msg}
+		this.ServeJSON()
+		this.StopRun()
+	}
 }
 
 // 后台首页
@@ -313,4 +343,16 @@ func getCurrentPath() (string, error) {
 		return "", errors.New(`error: Can't find "/" or "\".`)
 	}
 	return string(path[0 : i+1]), nil
+}
+
+// 生成随机字符串
+func GetRandomString(l int) string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	bytes := []byte(str)
+	result := []byte{}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < l; i++ {
+		result = append(result, bytes[r.Intn(len(bytes))])
+	}
+	return string(result)
 }

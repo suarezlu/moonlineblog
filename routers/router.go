@@ -13,6 +13,7 @@ func init() {
 	beego.Router("/sys/login", &controllers.SysController{}, "*:Login")
 	beego.Router("/sys/logout", &controllers.SysController{}, "get:Logout")
 	beego.Router("/sys", &controllers.SysController{}, "get:Home")
+	beego.Router("/sys/pwd", &controllers.SysController{}, "*:Pwd")
 	beego.Router("/sys/upload", &controllers.SysController{}, "*:Upload")
 	// 分类
 	beego.Router("/sys/category", &controllers.SysController{}, "get:Category")

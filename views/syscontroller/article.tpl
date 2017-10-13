@@ -2,7 +2,7 @@
 <script type="text/javascript" src="/static/ueditor/ueditor.all.min.js"></script>
 
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-	<legend>添加文章</legend>
+	<legend>{{{if eq 0 .Article.Id}}}添加文章{{{else}}}编辑文章{{{end}}}</legend>
 </fieldset>
 
 <form class="layui-form" action="" style="margin-right:50px;">

@@ -18,7 +18,6 @@
           {{{.Auth.User.Username}}}
         </a>
         <dl class="layui-nav-child">
-			<dd><a href="#">修改密码</a></dd>
           	<dd><a href="/sys/logout">退出</a></dd>
         </dl>
       </li>
@@ -37,6 +36,14 @@
 					<dd><a href="javascript:;" data-src="/sys/category">&nbsp;&nbsp;&nbsp;&nbsp;分类管理</a></dd>
 					<dd><a href="javascript:;" data-src="/sys/articles">&nbsp;&nbsp;&nbsp;&nbsp;文章管理</a></dd>
 					<dd><a href="javascript:;" data-src="/sys/article/0">&nbsp;&nbsp;&nbsp;&nbsp;添加文章</a></dd>
+				</dl>
+			</li>
+			<li class="layui-nav-item layui-nav-itemed">
+				<a href="javascript:;">
+					<i class="layui-icon">&#xe614;</i>设置
+				</a>
+				<dl class="layui-nav-child">
+					<dd><a href="javascript:;" data-src="/sys/pwd">&nbsp;&nbsp;&nbsp;&nbsp;修改密码</a></dd>
 				</dl>
 			</li>
       </ul>
