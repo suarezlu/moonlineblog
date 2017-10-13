@@ -21,7 +21,7 @@ func init() {
 	orm.RegisterDataBase("default", "mysql", conStr)
 
 	prefix := beego.AppConfig.String("mysqlprefix")
-	orm.RegisterModelWithPrefix(prefix, new(User), new(Category))
+	orm.RegisterModelWithPrefix(prefix, new(User), new(Category), new(Article))
 }
 
 // 用户
@@ -42,4 +42,17 @@ type Category struct {
 	Name    string
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time `orm:"auto_now;type(datetime)"`
+}
+
+// 文章
+type Article struct {
+	Id          int
+	UserId      int
+	CategoryId  int
+	Title       string
+	Content     string
+	Info        string
+	ReleaseTime time.Time
+	Created     time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated     time.Time `orm:"auto_now;type(datetime)"`
 }

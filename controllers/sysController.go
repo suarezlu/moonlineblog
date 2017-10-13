@@ -5,6 +5,12 @@ import (
 	"encoding/hex"
 	"errors"
 	"io"
+	"os"
+	"os/exec"
+	"path"
+	"path/filepath"
+	"strings"
+	"time"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -91,9 +97,7 @@ func (this *SysController) Logout() {
 }
 
 // 后台首页
-func (this *SysController) Home() {
-
-}
+func (this *SysController) Home() {}
 
 // 分类首页
 func (this *SysController) Category() {}
@@ -158,6 +162,118 @@ func (this *SysController) CategoryAdd() {
 	this.StopRun()
 }
 
+// 文章管理
+func (this *SysController) Articles() {}
+
+// 文章列表
+func (this *SysController) ArticleList() {
+	page, _ := this.GetInt("page", 1)
+	limit, _ := this.GetInt("limit", 30)
+	offset := (page - 1) * limit
+	cnt, _ := this.Orm.QueryTable(new(models.Article)).Count()
+	var maps []orm.Params
+	this.Orm.QueryTable(new(models.Article)).Limit(limit, offset).Values(&maps)
+	this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "count": cnt, "data": maps}
+	this.ServeJSON()
+	this.StopRun()
+}
+
+// 文章详情(添加or编辑)
+func (this *SysController) Article() {
+	var categories []orm.Params
+	this.Orm.QueryTable(new(models.Category)).Values(&categories)
+
+	id, _ := this.GetInt(":id", 0)
+	var article models.Article
+	if id == 0 {
+		article.Id = 0
+	} else {
+		article.Id = id
+		this.Orm.Read(&article)
+	}
+
+	this.Data["Categories"] = categories
+	this.Data["Article"] = article
+}
+
+// 保存文章
+func (this *SysController) ArticleSave() {
+	var article models.Article
+	id, _ := this.GetInt("id", 0)
+	categoryId, _ := this.GetInt("category_id", 0)
+	if id == 0 {
+		article.UserId = this.Auth.Id
+	} else {
+		article.Id = id
+		this.Orm.Read(&article)
+	}
+
+	article.Title = this.GetString("title")
+	article.Info = this.GetString("info")
+	article.Content = this.GetString("content")
+	article.ReleaseTime = StrToLocationTime(this.GetString("release_time"))
+	article.CategoryId = categoryId
+
+	if id == 0 {
+		this.Orm.Insert(&article)
+	} else {
+		this.Orm.Update(&article)
+	}
+
+	this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "data": article.Id, "dd": article}
+	this.ServeJSON()
+	this.StopRun()
+}
+
+// 删除文章
+func (this *SysController) ArticleDel() {
+	id, _ := this.GetInt("Id")
+	this.Orm.Delete(&models.Article{Id: id})
+
+	this.Data["json"] = map[string]interface{}{"code": 0, "msg": ""}
+	this.ServeJSON()
+	this.StopRun()
+}
+
+// 上传接口（ueditor）
+// 返回数据格式：
+// {
+//     "state": "SUCCESS",
+//     "url": "upload/demo.jpg",
+//     "title": "demo.jpg",
+//     "original": "demo.jpg"
+// }
+func (this *SysController) Upload() {
+	file, fileHead, err := this.GetFile("upfile")
+	defer file.Close()
+	result := make(map[string]interface{})
+	if err == nil {
+		result["title"] = fileHead.Filename
+		result["original"] = fileHead.Filename
+		result["url"] = ""
+		result["state"] = "FAIL"
+
+		cPath, err := getCurrentPath()
+		if err == nil {
+			fName := "/static/img/upload/" + Md5(string(this.Auth.Id)+time.Now().String()+fileHead.Filename) + path.Ext(fileHead.Filename)
+			err := this.SaveToFile("upfile", cPath+fName)
+			if err == nil {
+				result["state"] = "SUCCESS"
+				result["url"] = fName
+			} else {
+				result["message"] = err.Error()
+			}
+		} else {
+			result["message"] = err.Error()
+		}
+	} else {
+		result["message"] = err.Error()
+	}
+	this.Data["json"] = result
+	this.ServeJSON()
+	this.StopRun()
+}
+
 // 返回字符串的md5值
 func Md5(str string) string {
 	if str != "" {
@@ -170,4 +286,31 @@ func Md5(str string) string {
 		}
 	}
 	panic(errors.New("str is empty."))
+}
+
+// 时间转换
+func StrToLocationTime(strTime string) time.Time {
+	loc, _ := time.LoadLocation("Local")
+	t, _ := time.ParseInLocation("2006-01-02 15:04:05", strTime, loc)
+	return t
+}
+
+// 获取当前目录
+func getCurrentPath() (string, error) {
+	file, err := exec.LookPath(os.Args[0])
+	if err != nil {
+		return "", err
+	}
+	path, err := filepath.Abs(file)
+	if err != nil {
+		return "", err
+	}
+	i := strings.LastIndex(path, "/")
+	if i < 0 {
+		i = strings.LastIndex(path, "\\")
+	}
+	if i < 0 {
+		return "", errors.New(`error: Can't find "/" or "\".`)
+	}
+	return string(path[0 : i+1]), nil
 }

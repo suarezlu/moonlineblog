@@ -31,12 +31,17 @@ layui.use('table', function(){
 				value:''
 		},function(value,index){
 			$.ajax({
-				url:'/sys/categoryAdd',
+				url:'/sys/categoryadd',
 				data:{Name:value},
 				type:'post',
 				dataType:'json',
 				success:function(resp){
-					layer.msg('添加成功！');
+					if(resp.code==0){
+						layer.close(index);
+						layer.alert('添加成功！', {icon: 1,title:"提示"},function(index2){
+							location.href=location.href;
+						});
+					}
 				}
 			});
 		});
