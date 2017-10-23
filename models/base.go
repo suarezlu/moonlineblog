@@ -34,27 +34,31 @@ type User struct {
 	LastTime      time.Time
 	LastIp        string
 	LoginErrTimes int
+	Article       []*Article `orm:"reverse(many)"`
 }
 
 // 分类
 type Category struct {
 	Id      int
 	Name    string
-	Created time.Time `orm:"auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"auto_now;type(datetime)"`
+	Created time.Time  `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time  `orm:"auto_now;type(datetime)"`
+	Article []*Article `orm:"reverse(many)"`
 }
 
 // 文章
 type Article struct {
-	Id          int
-	UserId      int
-	CategoryId  int
+	Id int
+	//UserId int
+	//CategoryId  int
 	Title       string
 	Content     string
 	Info        string
 	ReleaseTime time.Time
 	Created     time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated     time.Time `orm:"auto_now;type(datetime)"`
+	User        *User     `orm:"rel(fk)"`
+	Category    *Category `orm:"rel(fk)"`
 }
 
 // 配置

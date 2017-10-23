@@ -31,7 +31,7 @@
     		<select name="category_id" lay-filter="aihao" lay-verify="required">
 		        <option value="">请选择分类</option>
 				{{{range $i,$item := .Categories}}}
-				<option value="{{{$item.Id}}}"  {{{if eq $item.Id $.Article.CategoryId}}}selected{{{end}}}>{{{$item.Name}}}</option>
+				<option value="{{{$item.Id}}}"  {{{if eq $item.Id $.Article.Category.Id}}}selected{{{end}}}>{{{$item.Name}}}</option>
 				{{{end}}}
       		</select>
     	</div>

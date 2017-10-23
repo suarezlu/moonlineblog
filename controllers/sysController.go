@@ -226,9 +226,11 @@ func (this *SysController) ArticleList() {
 	limit, _ := this.GetInt("limit", 30)
 	offset := (page - 1) * limit
 	cnt, _ := this.Orm.QueryTable(new(models.Article)).Count()
-	var maps []orm.Params
-	this.Orm.QueryTable(new(models.Article)).Limit(limit, offset).Values(&maps)
-	this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "count": cnt, "data": maps}
+	var list []models.Article
+	this.Orm.QueryTable(new(models.Article)).RelatedSel().Limit(limit, offset).All(&list)
+	//	var maps []orm.Params
+	//	this.Orm.QueryTable(new(models.Article)).Limit(limit, offset).Values(&maps)
+	this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "count": cnt, "data": list}
 	this.ServeJSON()
 	this.StopRun()
 }
@@ -242,6 +244,7 @@ func (this *SysController) Article() {
 	var article models.Article
 	if id == 0 {
 		article.Id = 0
+		article.Category = new(models.Category)
 	} else {
 		article.Id = id
 		this.Orm.Read(&article)
@@ -257,7 +260,7 @@ func (this *SysController) ArticleSave() {
 	id, _ := this.GetInt("id", 0)
 	categoryId, _ := this.GetInt("category_id", 0)
 	if id == 0 {
-		article.UserId = this.Auth.Id
+		article.User = &this.Auth.User
 	} else {
 		article.Id = id
 		this.Orm.Read(&article)
@@ -267,7 +270,10 @@ func (this *SysController) ArticleSave() {
 	article.Info = this.GetString("info")
 	article.Content = this.GetString("content")
 	article.ReleaseTime = StrToLocationTime(this.GetString("release_time"))
-	article.CategoryId = categoryId
+
+	var cat models.Category
+	cat.Id = categoryId
+	article.Category = &cat
 
 	if id == 0 {
 		this.Orm.Insert(&article)
@@ -275,7 +281,7 @@ func (this *SysController) ArticleSave() {
 		this.Orm.Update(&article)
 	}
 
-	this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "data": article.Id, "dd": article}
+	this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "data": article.Id}
 	this.ServeJSON()
 	this.StopRun()
 }

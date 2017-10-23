@@ -4,6 +4,10 @@
 
 <table class="layui-hide" id="table_articles" lay-filter="categoryEvent"></table> 
 
+<script type="text/html" id="categoryName">
+	{{d.Category.Name}}
+</script>
+
 <script type="text/html" id="createdTpl">
 	{{d.Created.slice(0,19).replace(/T/," ")}}
 </script>
@@ -31,6 +35,7 @@ layui.use('table', function(){
 		cols: [[
 	    	{field:'Id', title: 'ID', sort: true, width:100},
 	    	{field:'Title', title: '标题', width:200},
+			{field:'Category.Name', title:'分类', width:200, templet:'#categoryName'},
 			{field:'Created', title:'创建时间', width:300, templet:'#createdTpl'},
 			{field:'Updated', title:'最后更新时间', width:300, templet:'#updatedTpl'},
 			{fixed: 'right', width:150, align:'center', toolbar: '#barCategory'}
