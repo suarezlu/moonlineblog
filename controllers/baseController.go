@@ -2,18 +2,30 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	. "github.com/suarezlu/moonlineblog/models"
+	"github.com/astaxie/beego/orm"
+	"github.com/suarezlu/moonlineblog/models"
 )
 
 type BaseController struct {
 	beego.Controller
-	Auth
+	Orm orm.Ormer
 }
 
 func (this *BaseController) Prepare() {
-	this.Layout = "layout/main.tpl"
+	this.Orm = orm.NewOrm()
+	if !this.Ctx.Input.IsAjax() {
+		this.Layout = "layout/main.tpl"
 
-	this.Data["Title"] = "BLOG"
+		this.LayoutSections = make(map[string]string)
+
+		var categories []orm.Params
+		i, _ := this.Orm.QueryTable(new(models.Category)).Values(&categories)
+		this.Data["Categories"] = categories
+		this.Data["I"] = i
+		this.LayoutSections["Nav"] = "common/nav.tpl"
+
+		this.Data["Title"] = "BLOG"
+	}
 
 	//	this.LayoutSections = make(map[string]string)
 	//	this.LayoutSections["Navbar"] = "common/navbar.html"

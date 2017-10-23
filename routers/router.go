@@ -7,13 +7,14 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.BlogController{}, "get:Index")
-	beego.Router("/blog/test", &controllers.BlogController{}, "get:Test")
+	//beego.Router("/blog/test", &controllers.BlogController{}, "get:Test")
 
 	// 管理后台
 	beego.Router("/sys/login", &controllers.SysController{}, "*:Login")
 	beego.Router("/sys/logout", &controllers.SysController{}, "get:Logout")
 	beego.Router("/sys", &controllers.SysController{}, "get:Home")
 	beego.Router("/sys/pwd", &controllers.SysController{}, "*:Pwd")
+	beego.Router("/sys/config", &controllers.SysController{}, "*:Config")
 	beego.Router("/sys/upload", &controllers.SysController{}, "*:Upload")
 	// 分类
 	beego.Router("/sys/category", &controllers.SysController{}, "get:Category")

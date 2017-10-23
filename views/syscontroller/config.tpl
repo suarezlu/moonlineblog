@@ -1,24 +1,18 @@
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-	<legend>修改密码</legend>
+	<legend>站点配置</legend>
 </fieldset>
 
 <form class="layui-form">
 	<div class="layui-form-item">
-		<label class="layui-form-label">原密码</label>
+		<label class="layui-form-label">标题</label>
 		<div class="layui-input-inline">
-			<input name="pwd" lay-verify="required" placeholder="请输入密码" class="layui-input" type="password">
+			<input name="title" lay-verify="required" class="layui-input" value="{{{.Configs.title}}}" type="text">
 		</div>
 	</div>
 	<div class="layui-form-item">
-		<label class="layui-form-label">新密码</label>
+		<label class="layui-form-label">链接</label>
 		<div class="layui-input-inline">
-			<input name="newpwd" lay-verify="required" placeholder="请输入新密码" class="layui-input" type="password">
-		</div>
-	</div>
-	<div class="layui-form-item">
-		<label class="layui-form-label">重复新密码</label>
-		<div class="layui-input-inline">
-			<input name="repeatpwd" lay-verify="required" autocomplete="off" placeholder="请输入新密码" class="layui-input" type="password">
+			<input name="url" class="layui-input" type="text" value="{{{.Configs.url}}}">
 		</div>
 	</div>
   	<div class="layui-form-item">
@@ -29,10 +23,9 @@
 </form>
 <script>
 layui.use(['form', 'jquery'], function(){
-	//var form = layui.form,layer = layui.layer,laydate = layui.laydate;
 	layui.form.on('submit(*)', function(data){
 		layui.jquery.ajax({
-			url:"/sys/pwd",
+			url:"/sys/config",
 			type:'post',
 			data:data.field,
 			dataType:'json',

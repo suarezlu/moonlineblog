@@ -126,6 +126,31 @@ func (this *SysController) Pwd() {
 	}
 }
 
+// 站点配置
+func (this *SysController) Config() {
+	names := [2]string{"title", "url"}
+
+	if this.Ctx.Input.IsPost() {
+		for _, name := range names {
+			this.Orm.InsertOrUpdate(&models.Config{Name: name, Value: this.GetString(name, "")})
+		}
+		this.Data["json"] = map[string]interface{}{"code": 0, "msg": ""}
+		this.ServeJSON()
+		this.StopRun()
+	} else {
+		configList := make(map[string]string)
+		for _, name := range names {
+			configList[name] = ""
+		}
+		var maps []orm.Params
+		this.Orm.QueryTable(new(models.Config)).Values(&maps)
+		for _, item := range maps {
+			configList[item["Name"].(string)] = item["Value"].(string)
+		}
+		this.Data["Configs"] = configList
+	}
+}
+
 // 后台首页
 func (this *SysController) Home() {}
 

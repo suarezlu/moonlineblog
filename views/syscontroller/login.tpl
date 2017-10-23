@@ -7,7 +7,12 @@
     <title>后台登录</title>
     <link rel="stylesheet" href="/static/layui/css/layui.css">
     <style>
-
+		body
+		  { 
+		    background-image:url('/static/img/bg.jpg');
+		    background-repeat:no-repeat;
+		    background-position:center;
+		  }
         .main {
             margin: 0 auto;
             width: 400px;
@@ -15,6 +20,7 @@
             border-color: #eeeeee;
             border-radius: 5px;
             margin-top: 100px;
+			background:#fff;
         }
     </style>
 
@@ -43,9 +49,9 @@
                             </div>
                         </div>
 
-                        <div class="layui-form-item" style="float: right; margin-right: 42px;">
+<!--                        <div class="layui-form-item" style="float: right; margin-right: 42px;">
                             <input type="checkbox" name="is_top" value="1" title="记住密码">
-                        </div>
+                        </div>-->
 
                         <div class="layui-form-item">
                             <button lay-submit class="layui-btn btn-submit" style="width: 300px; border-radius:3px"
@@ -62,7 +68,6 @@
 
 </body>
 <script>
-    //Demo
     layui.use(['form','layer'], function () {
 		var err = "{{{.ErrMsg}}}";
 		if(err!=""){

@@ -21,7 +21,7 @@ func init() {
 	orm.RegisterDataBase("default", "mysql", conStr)
 
 	prefix := beego.AppConfig.String("mysqlprefix")
-	orm.RegisterModelWithPrefix(prefix, new(User), new(Category), new(Article))
+	orm.RegisterModelWithPrefix(prefix, new(User), new(Category), new(Article), new(Config))
 }
 
 // 用户
@@ -55,4 +55,10 @@ type Article struct {
 	ReleaseTime time.Time
 	Created     time.Time `orm:"auto_now_add;type(datetime)"`
 	Updated     time.Time `orm:"auto_now;type(datetime)"`
+}
+
+// 配置
+type Config struct {
+	Name  string `orm:"pk"`
+	Value string
 }

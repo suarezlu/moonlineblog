@@ -44,6 +44,7 @@
 				</a>
 				<dl class="layui-nav-child">
 					<dd><a href="javascript:;" data-src="/sys/pwd">&nbsp;&nbsp;&nbsp;&nbsp;修改密码</a></dd>
+					<dd><a href="javascript:;" data-src="/sys/config">&nbsp;&nbsp;&nbsp;&nbsp;站点配置</a></dd>
 				</dl>
 			</li>
       </ul>
