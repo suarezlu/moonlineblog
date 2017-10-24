@@ -15,7 +15,10 @@
 		<!-- 内容 -->
 		<div class="blog-list">
 			<div class="blog-item">
-				<h2 class="blog-title"><a href="#">前言</a></h2>
+				<h2 class="blog-title">
+					<span class="layui-badge">GO</span>
+					<a href="#">前言</a>
+				</h2>
 				<div class="blog-info"> Nginx中是不支持pathinfo模式，所以通过修改nginx的配置文件来让项目支持pathinfo模式访问。 </div>
 				<div class="blog-foot">
 					<i class="layui-icon" style="font-size: 14px;">&#xe637;</i> 2017-01-01 12:34

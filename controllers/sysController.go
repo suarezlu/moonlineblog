@@ -160,12 +160,31 @@ func (this *SysController) Category() {}
 // 分类列表（后台）
 func (this *SysController) CategoryList() {
 	page, _ := this.GetInt("page", 1)
-	limit, _ := this.GetInt("limit", 30)
+	limit, _ := this.GetInt("limit", 20)
 	offset := (page - 1) * limit
 	cnt, _ := this.Orm.QueryTable(new(models.Category)).Count()
 	var maps []orm.Params
-	this.Orm.QueryTable(new(models.Category)).Limit(limit, offset).Values(&maps)
+	this.Orm.QueryTable(new(models.Category)).GroupBy("sort").Limit(limit, offset).Values(&maps)
 	this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "count": cnt, "data": maps}
+	this.ServeJSON()
+	this.StopRun()
+}
+
+// 修改分类排序（后台）
+func (this *SysController) CategorySort() {
+	id, _ := this.GetInt("id", 0)
+	sort, _ := this.GetInt("sort", 0)
+
+	category := models.Category{Id: id}
+	err := this.Orm.Read(&category)
+	if err == nil {
+		category.Sort = sort
+		this.Orm.Update(&category, "Sort", "Updated")
+		this.Data["json"] = map[string]interface{}{"code": 0, "msg": "", "data": category}
+	} else {
+		this.Data["json"] = map[string]interface{}{"code": 1, "msg": err.Error()}
+	}
+
 	this.ServeJSON()
 	this.StopRun()
 }

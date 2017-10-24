@@ -41,6 +41,7 @@ type User struct {
 type Category struct {
 	Id      int
 	Name    string
+	Sort    int
 	Created time.Time  `orm:"auto_now_add;type(datetime)"`
 	Updated time.Time  `orm:"auto_now;type(datetime)"`
 	Article []*Article `orm:"reverse(many)"`

@@ -19,9 +19,8 @@ func (this *BaseController) Prepare() {
 		this.LayoutSections = make(map[string]string)
 
 		var categories []orm.Params
-		i, _ := this.Orm.QueryTable(new(models.Category)).Values(&categories)
+		this.Orm.QueryTable(new(models.Category)).OrderBy("sort").Values(&categories)
 		this.Data["Categories"] = categories
-		this.Data["I"] = i
 		this.LayoutSections["Nav"] = "common/nav.tpl"
 
 		this.Data["Title"] = "BLOG"

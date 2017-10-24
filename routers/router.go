@@ -22,6 +22,7 @@ func init() {
 	beego.Router("/sys/categoryupdate", &controllers.SysController{}, "post:CategoryUpdate")
 	beego.Router("/sys/categorydel", &controllers.SysController{}, "post:CategoryDel")
 	beego.Router("/sys/categoryadd", &controllers.SysController{}, "post:CategoryAdd")
+	beego.Router("/sys/categorysort", &controllers.SysController{}, "post:CategorySort")
 	// 文章
 	beego.Router("/sys/articles", &controllers.SysController{}, "get:Articles")
 	beego.Router("/sys/articlelist", &controllers.SysController{}, "get:ArticleList")

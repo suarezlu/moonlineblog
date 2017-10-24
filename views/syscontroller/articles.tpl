@@ -5,7 +5,7 @@
 <table class="layui-hide" id="table_articles" lay-filter="categoryEvent"></table> 
 
 <script type="text/html" id="categoryName">
-	{{d.Category.Name}}
+	<span class="layui-badge layui-bg-black">{{d.Category.Name}}</span>
 </script>
 
 <script type="text/html" id="createdTpl">
@@ -33,12 +33,12 @@ layui.use('table', function(){
 		page: true,
 		limit:20,
 		cols: [[
-	    	{field:'Id', title: 'ID', sort: true, width:100},
-	    	{field:'Title', title: '标题', width:200},
-			{field:'Category.Name', title:'分类', width:200, templet:'#categoryName'},
-			{field:'Created', title:'创建时间', width:300, templet:'#createdTpl'},
-			{field:'Updated', title:'最后更新时间', width:300, templet:'#updatedTpl'},
-			{fixed: 'right', width:150, align:'center', toolbar: '#barCategory'}
+	    	{field:'Id', title:'ID', width:80, sort: true},
+	    	{field:'Title', title:'标题', width: 200},
+			{field:'Category', title:'分类', width:150, templet:'#categoryName'},
+			{field:'Created', title:'创建时间', width:164, templet:'#createdTpl'},
+			{field:'Updated', title:'最后更新时间', width:164, templet:'#updatedTpl'},
+			{fixed: 'right', width:150, align:'center', toolbar:'#barCategory'}
 		]]
 	});
 	// 按钮事件绑定

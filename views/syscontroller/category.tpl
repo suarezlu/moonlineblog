@@ -54,12 +54,31 @@ layui.use('table', function(){
 		page: true,
 		limit:20,
 		cols: [[
-	    	{field:'Id', title: 'ID', sort: true, width:100},
+	    	{field:'Id', title:'ID', width:100},
+			{field:'Sort', title:'排序', sort: true,width:100,edit:'text'},
 	    	{field:'Name', title: '分类', width:200},
 			{field:'Created', title:'创建时间', width:300, templet:'#createdTpl'},
 			{field:'Updated', title:'最后更新时间', width:300, templet:'#updatedTpl'},
-			{fixed: 'right', width:150, align:'center', toolbar: '#barCategory'}
+			{fixed:'right', width:150, align:'center', toolbar: '#barCategory'}
 		]]
+	});
+	// 监听单元格编辑
+	table.on('edit(categoryEvent)', function(obj){
+		//var value = obj.value, data = obj.data, field = obj.field;
+		//layer.msg('[ID: '+ data.Id +'] ' + field + ' 字段更改为：'+ value);
+		$.ajax({
+			url:'/sys/categorysort',
+			data:{id:obj.data.Id,sort:obj.value},
+			type:'post',
+			dataType:'json',
+			success:function(resp){
+				if(resp.code==0){
+					layer.msg("修改成功！");
+				}else{
+					layer.msg(resp.msg);
+				}
+			}
+		});
 	});
 
 	// 分类名列表事件绑定
