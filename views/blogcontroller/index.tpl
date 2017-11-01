@@ -14,51 +14,23 @@
 		</div>
 		<!-- 内容 -->
 		<div class="blog-list">
-			<div class="blog-item">
-				<h2 class="blog-title">
-					<span class="layui-badge">GO</span>
-					<a href="#">前言</a>
-				</h2>
-				<div class="blog-info"> Nginx中是不支持pathinfo模式，所以通过修改nginx的配置文件来让项目支持pathinfo模式访问。 </div>
-				<div class="blog-foot">
-					<i class="layui-icon" style="font-size: 14px;">&#xe637;</i> 2017-01-01 12:34
-					<i class="layui-icon" style="font-size: 14px;">&#xe612;</i> by suarez 
+			{{{range $i,$item := .List}}}
+				<div class="blog-item">
+					<h2 class="blog-title">
+						<span class="layui-badge">{{{$item.Category.Name}}}</span>
+						<a href="#">{{{$item.Title}}}</a>
+					</h2>
+					<div class="blog-info">{{{$item.Info}}}</div>
+					<div class="blog-foot">
+						<i class="layui-icon" style="font-size: 14px;">&#xe60e;</i> {{{date $item.ReleaseTime "Y-m-d H:i"}}}
+						<i class="layui-icon" style="font-size: 14px;">&#xe612;</i> by {{{$item.User.Username}}} 
+					</div>
 				</div>
-			</div>
-			<div class="blog-item">
-				<h2 class="blog-title"><a href="#">前言</a></h2>
-				<div class="blog-info"> Nginx中是不支持pathinfo模式，所以通过修改nginx的配置文件来让项目支持pathinfo模式访问。 </div>
-				<div class="blog-foot">
-					<i class="layui-icon" style="font-size: 14px;">&#xe637;</i> 2017-01-01 12:34
-					<i class="layui-icon" style="font-size: 14px;">&#xe612;</i> by suarez 
-				</div>
-			</div>
-			<div class="blog-item">
-				<h2 class="blog-title"><a href="#">前言</a></h2>
-				<div class="blog-info"> Nginx中是不支持pathinfo模式，所以通过修改nginx的配置文件来让项目支持pathinfo模式访问。 </div>
-				<div class="blog-foot">
-					<i class="layui-icon" style="font-size: 14px;">&#xe637;</i> 2017-01-01 12:34
-					<i class="layui-icon" style="font-size: 14px;">&#xe612;</i> by suarez 
-				</div>
-			</div>
-			<div class="blog-item">
-				<h2 class="blog-title"><a href="#">前言</a></h2>
-				<div class="blog-info"> Nginx中是不支持pathinfo模式，所以通过修改nginx的配置文件来让项目支持pathinfo模式访问。 </div>
-				<div class="blog-foot">
-					<i class="layui-icon" style="font-size: 14px;">&#xe637;</i> 2017-01-01 12:34
-					<i class="layui-icon" style="font-size: 14px;">&#xe612;</i> by suarez 
-				</div>
-			</div>
-			<div class="blog-item">
-				<h2 class="blog-title"><a href="#">前言</a></h2>
-				<div class="blog-info"> Nginx中是不支持pathinfo模式，所以通过修改nginx的配置文件来让项目支持pathinfo模式访问。 </div>
-				<div class="blog-foot">
-					<i class="layui-icon" style="font-size: 14px;">&#xe637;</i> 2017-01-01 12:34
-					<i class="layui-icon" style="font-size: 14px;">&#xe612;</i> by suarez 
-				</div>
-			</div>
+			{{{end}}}
 		</div>
-    </div>
+    	<!-- 分页 -->
+		<div id="page"></div>
+	</div>
     <div class="layui-col-md4">
 		<div class="blog-item-right">
 			<fieldset class="layui-elem-field layui-field-title">
@@ -94,8 +66,9 @@
 </div>
 <script>
 //一般直接写在一个js文件中
-layui.use(['layer', 'form', 'carousel'], function(){
-  	var layer = layui.layer,form = layui.form;
+layui.use(['layer', 'form', 'carousel', 'laypage'], function(){
+	
+  	var layer = layui.layer, form = layui.form, laypage = layui.laypage;
 	layui.carousel.render({
 		elem: '#img-carousel',
 	    width: '100%',
@@ -103,7 +76,25 @@ layui.use(['layer', 'form', 'carousel'], function(){
 		anim: 'default',
 		indicator: 'none'
 	});
-  
-  //layer.msg('Hello World');
+	
+	laypage.render({
+		elem: 'page',
+		curr: {{{.PageInfo.Page}}},
+		limit: {{{.PageInfo.Limit}}},
+		count: {{{.PageInfo.Count}}},
+		jump: function(obj, first){
+			if (!first){
+				var categoryId = {{{.PageInfo.CategoryId}}};
+				var url = "";
+				if(categoryId>0){
+					url = "/?cat="+categoryId+"&page="+obj.curr;
+				}else{
+					url = "/?page=" + obj.curr;
+				}
+				location.href = url;
+			}
+		}
+	});
 });
+
 </script> 
